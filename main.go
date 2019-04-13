@@ -14,9 +14,9 @@ type LandingPageData struct {
 	Name string
 }
 
-func indexHandler(w http.ResponseWriter, req *http.Request) {
-	tmpl := template.Must(template.ParseFiles("index.html"))
+var tmpl = template.Must(template.ParseFiles("index.html"))
 
+func indexHandler(w http.ResponseWriter, req *http.Request) {
 	name := req.URL.Query().Get("name")
 	nameInPath := req.URL.Path[1:]
 	isNameUnspecified := name == ""
