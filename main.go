@@ -3,44 +3,37 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
-// language=HTML
-var template = `
-	<!doctype html>
-	<html lang="en">
-	<head>
-	<meta charset="UTF-8">
-	 <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-	 <meta http-equiv="X-UA-Compatible" content="ie=edge">
-	 <title>Secret Place</title>
-	<style>
-		body {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			min-height: 100vh;
-
-			font-family: "Helvetica Neue", sans-serif;
-		}
-
-		h1 {
-			font-size: 2.8em;
-		}
-	</style>
-	</head>
-	<body>
-	  <h1>Hello, World! You've discovered my secret lair! 👏🏻</h1>
-	</body>
-	</html>
-`
+type LandingPageData struct {
+	Name string
+}
 
 func indexHandler(w http.ResponseWriter, req *http.Request) {
-	_, err := fmt.Fprintf(w, template)
+	tmpl := template.Must(template.ParseFiles("index.html"))
 
+	name := req.URL.Query().Get("name")
+	nameInPath := req.URL.Path[1:]
+	isNameUnspecified := name == ""
+
+	if isNameUnspecified && nameInPath != "" {
+		name = nameInPath
+	} else if isNameUnspecified {
+		name = "World"
+	}
+
+	name = strings.Title(name)
+
+	data := LandingPageData{
+		Name: name,
+	}
+
+	err := tmpl.Execute(w, data)
 	if err != nil {
 		log.Fatalln("Cannot send response..?")
 	}
