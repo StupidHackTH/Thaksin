@@ -1,5 +1,5 @@
 build:
-	gcloud builds submit --tag asia.gcr.io/phoomparin/thaksin
+	gcloud builds submit --config cloudbuild.yml .
 	gcloud beta run deploy thaksin --image asia.gcr.io/phoomparin/thaksin --project phoomparin
 
 build-local:
