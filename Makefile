@@ -1,14 +1,21 @@
 main: build-local
 
+PROJECT=phoomparin
+IMAGE=asia.gcr.io/${PROJECT}/thaksin
+TAG=latest
+
 remote: build-remote deploy
 local: build-local deploy
 
 deploy:
-	gcloud beta run deploy thaksin --image asia.gcr.io/phoomparin/thaksin --project phoomparin
+	@echo --- Deploying Image: ${IMAGE} ---
+	gcloud beta run deploy thaksin --image ${IMAGE} --project ${PROJECT}
 
 build-remote:
+	@echo --- Building Image Remotely: ${IMAGE} ---
 	gcloud builds submit --config cloudbuild.yml .
 
 build-local:
-	docker build -t asia.gcr.io/phoomparin/thaksin:latest .
-	docker push asia.gcr.io/phoomparin/thaksin:latest
+	@echo --- Building Image Locally: ${IMAGE} ---
+	docker build -t ${IMAGE}:${TAG} .
+	docker push ${IMAGE}:${TAG}
