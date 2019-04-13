@@ -33,8 +33,7 @@ var template = `
 	</style>
 	</head>
 	<body>
-	  <h1>Hello, World! You've discovered my secret lair! ;)</h1>
-	  <h2>Wow, that's cool! :)</h2>
+	  <h1>Hello, World! You've discovered my secret lair! 👏🏻</h1>
 	</body>
 	</html>
 `
