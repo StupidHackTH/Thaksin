@@ -1,4 +1,7 @@
 main: build-local
+build: build-binary
+
+dev: run-autoreload
 
 PROJECT=phoomparin
 IMAGE=asia.gcr.io/${PROJECT}/thaksin
@@ -6,6 +9,12 @@ TAG=latest
 
 remote: build-remote deploy
 local: build-local deploy
+
+run-autoreload:
+	@gin run main.go
+
+build-binary:
+	env CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .
 
 deploy:
 	@echo --- Deploying Image: ${IMAGE} ---
