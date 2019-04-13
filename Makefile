@@ -1,6 +1,5 @@
-main: build-local
+main: dev
 build: build-binary
-
 dev: run-autoreload
 
 PROJECT=phoomparin
