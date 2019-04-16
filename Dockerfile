@@ -1,6 +1,7 @@
 ARG APP_PATH=/go/src/github.com/phoomparin/thaksin
 
 FROM golang:1.12.3-alpine as build
+RUN apk add --update git
 ARG APP_PATH
 WORKDIR $APP_PATH
 COPY main.go .
