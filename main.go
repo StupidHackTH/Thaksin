@@ -69,6 +69,11 @@ const QUERY_SECRET = "jesuschrist420"
 
 func apiHandler(w http.ResponseWriter, req *http.Request) {
 	secret := req.URL.Query().Get("secret")
+	if secret == "thaksin" {
+		sendResponse(w, "ไอสัส กูอีกแล้วเหรอ")
+		return
+	}
+
 	if secret == QUERY_SECRET {
 		sendResponse(w, "You discovered our secret! 🐳")
 		return

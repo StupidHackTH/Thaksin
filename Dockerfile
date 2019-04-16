@@ -5,7 +5,8 @@ ARG APP_PATH
 WORKDIR $APP_PATH
 COPY main.go .
 COPY index.html .
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .
+RUN go mod
+RUN GO111MODULE=on CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .
 
 FROM alpine:3.7
 ARG APP_PATH
