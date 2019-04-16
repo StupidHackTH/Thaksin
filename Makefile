@@ -10,7 +10,7 @@ remote: build-remote deploy
 local: build-local deploy
 
 run-autoreload:
-	@gin run main.go
+	@gin --all run main.go
 
 build-binary:
 	env CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .

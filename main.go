@@ -8,13 +8,17 @@ import (
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/kataras/go-template/amber"
+
+	tmpl "github.com/kataras/go-template"
 )
 
 type LandingPageData struct {
 	Name string
 }
 
-var tmpl = template.Must(template.ParseFiles("index.html"))
+var landingTemplate = template.Must(template.ParseFiles("index.html"))
 
 func indexHandler(w http.ResponseWriter, req *http.Request) {
 	name := req.URL.Query().Get("name")
@@ -33,7 +37,7 @@ func indexHandler(w http.ResponseWriter, req *http.Request) {
 		Name: name,
 	}
 
-	err := tmpl.Execute(w, data)
+	err := landingTemplate.Execute(w, data)
 	if err != nil {
 		log.Fatalln("Cannot send response..?")
 	}
@@ -73,13 +77,35 @@ func apiHandler(w http.ResponseWriter, req *http.Request) {
 	sendResponse(w, "Everything is fine! 💖")
 }
 
+func helloHandler(w http.ResponseWriter, req *http.Request) {
+	data := map[string]interface{}{"Name": "You!"}
+
+	err := tmpl.ExecuteWriter(w, "hello.amber", data)
+	if err != nil {
+		_, err = w.Write([]byte(err.Error()))
+	}
+}
+
 func main() {
+	tmpl.AddEngine(amber.New()).Directory(".", ".amber")
+	err := tmpl.Load()
+	if err != nil {
+		panic("While parsing the template files: " + err.Error())
+	}
+
 	PORT := os.Getenv("PORT")
+	if PORT == "" {
+		PORT = "3000"
+	}
 
 	fmt.Println("Starting the server on Port", PORT)
 
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/api", apiHandler)
+	http.HandleFunc("/hello", helloHandler)
 
-	_ = http.ListenAndServe(":"+PORT, nil)
+	err = http.ListenAndServe(":"+PORT, nil)
+	if err != nil {
+		log.Println("Unable to start the server:", err)
+	}
 }
